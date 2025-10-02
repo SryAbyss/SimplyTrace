@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跳舞的线饭制游戏 - 简途</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4cc9f0;
+            --secondary: #ff9eeb;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --purple: #7209b7;
+            --pink: #f72585;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* 导航栏样式 */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+            .logo i {
+                margin-right: 10px;
+                font-size: 1.8rem;
+            }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+            .nav-links li {
+                margin-left: 2rem;
+            }
+
+            .nav-links a {
+                text-decoration: none;
+                color: var(--dark);
+                font-weight: 500;
+                transition: color 0.3s;
+            }
+
+                .nav-links a:hover {
+                    color: var(--primary);
+                }
+
+        .cta-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .cta-button:hover {
+                background-color: var(--secondary);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+
+        /* 英雄区域样式 */
+        .hero {
+            padding: 10rem 0 5rem;
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hero-text {
+            flex: 1;
+            padding-right: 2rem;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .app-mockup {
+            max-width: 300px;
+            border-radius: 30px; /* 为图片添加圆角效果 */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+            transition: transform 0.5s;
+        }
+
+            .app-mockup:hover {
+                transform: perspective(1000px) rotateY(0) rotateX(0);
+            }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+
+            .info-item i {
+                margin-right: 8px;
+                font-size: 1.2rem;
+            }
+
+        /* 关卡展示区域样式 */
+        .levels {
+            padding: 6rem 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+            .section-title h2 {
+                font-size: 2.5rem;
+                color: var(--secondary);
+                margin-bottom: 1rem;
+            }
+
+            .section-title p {
+                color: #666;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .level-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+            .level-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            }
+
+        .level-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            border-radius: 10px 10px 0 0; /* 为关卡图片添加圆角效果 */
+        }
+
+        .level-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .level-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .level-card p {
+            color: #666;
+            padding: 1.5rem;
+        }
+
+        /* 游戏特色区域样式 */
+        .features {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+            .feature-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+            .feature-icon i {
+                font-size: 1.8rem;
+                color: var(--primary);
+            }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: #666;
+        }
+
+        /* 下载区域样式 */
+        .download {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #7209b7 0%, #3a0ca3 100%);
+            text-align: center;
+            color: white;
+        }
+
+        .download-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .download-options {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            background: white;
+            color: var(--dark);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            min-width: 220px;
+        }
+
+            .download-btn i {
+                font-size: 2rem;
+                margin-right: 15px;
+                color: var(--primary);
+            }
+
+            .download-btn:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                background: var(--light);
+            }
+
+        /* 评价区域样式 */
+        .testimonials {
+            padding: 6rem 0;
+            background-color: white;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .author-info h4 {
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info p {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* 页脚样式 */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+            .footer-links li {
+                margin-bottom: 0.8rem;
+            }
+
+            .footer-links a {
+                color: #aaa;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+                .footer-links a:hover {
+                    color: white;
+                }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+            .social-links a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                background: rgba(255,255,255,0.1);
+                border-radius: 50%;
+                color: white;
+                transition: all 0.3s;
+            }
+
+                .social-links a:hover {
+                    background: var(--primary);
+                    transform: translateY(-3px);
+                }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-text {
+                padding-right: 0;
+                margin-bottom: 3rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .game-info {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .download-options {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .download-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-route"></i>
+                    <span>Simply Trace · 简途</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#levels">游戏关卡</a></li>
+                    <li><a href="#features">游戏特色</a></li>
+                    <li><a href="#download">下载游戏</a></li>
+                </ul>
+                <button class="cta-button">立即体验</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>化繁为简，循线而行——踏上属于你的 "简途"</h1>
+                    <p>Simply Trace · 简途 是由 SrY-ABYSS（AbyssStudio） 研发的跳舞的线饭制游戏。在游戏中，你将扮演一名舞线，踏上寻星之途，聆听天外之声，最终找到属于自己的 "简途"。</p>
+                </div>
+                <div class="hero-image">
+                    <!-- 使用本地图片并添加圆角效果 -->
+                    <img src="images\cover.png" alt="简途游戏封面" class="app-mockup">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关卡展示区域 -->
+    <section class="levels" id="levels">
+        <div class="container">
+            <div class="section-title">
+                <h2>游戏关卡图</h2>
+                <p>探索精心设计的关卡，体验不同的音乐与视觉风格</p>
+            </div>
+
+            <div class="levels-grid">
+                <!-- 关卡1：星相运轨 -->
+                <div class="level-card">
+                    <div class="level-image" style="background-image: url('images/pic1.png');">
+                        <div class="level-overlay">
+                            <h3>星相运轨</h3>
+                            <p>The End of Time</p>
+                        </div>
+                    </div>
+                    <p>穿越星际轨道，感受宇宙的浩瀚与神秘。</p>
+                </div>
+
+                <!-- 关卡2：凌空 -->
+                <div class="level-card">
+                    <div class="level-image" style="background-image: url('images/pic5.png');">
+                        <div class="level-overlay">
+                            <h3>凌空</h3>
+                            <p>Ascendia</p>
+                        </div>
+                    </div>
+                    <p>在云端舞动，体验自由飞翔的感觉。</p>
+                </div>
+
+                <!-- 关卡3：诗笺 -->
+                <div class="level-card">
+                    <div class="level-image" style="background-image: url('images/pic2.png');">
+                        <div class="level-overlay">
+                            <h3>诗笺</h3>
+                            <p>Poetic Brush</p>
+                        </div>
+                    </div>
+                    <p>用线条绘制诗意，感受艺术与音乐的完美结合。</p>
+                </div>
+
+                <!-- 关卡4：Cube -->
+                <div class="level-card">
+                    <div class="level-image" style="background-image: url('images/pic3.png');">
+                        <div class="level-overlay">
+                            <h3>Cube</h3>
+                            <p>立方空间</p>
+                        </div>
+                    </div>
+                    <p>在立方体构成的迷宫中穿梭，挑战空间感知。</p>
+                </div>
+
+                <!-- 关卡5：Eutopia -->
+                <div class="level-card">
+                    <div class="level-image" style="background-image: url('images/pic7.png');">
+                        <div class="level-overlay">
+                            <h3>Eutopia</h3>
+                            <p>理想之境</p>
+                        </div>
+                    </div>
+                    <p>探索理想中的完美世界，感受和谐与美好。</p>
+                </div>
+
+                <!-- 关卡6：Fine Logic -->
+                <div class="level-card">
+                    <div class="level-image" style="background-image: url('images/pic8.png');">
+                        <div class="level-overlay">
+                            <h3>Fine Logic</h3>
+                            <p>"It's fine, nothing will ever be too late"</p>
+                        </div>
+                    </div>
+                    <p>在逻辑与情感之间找到平衡，体验理性之美。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 游戏特色区域 -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>游戏特色</h2>
+                <p>体验独特的音乐节奏游戏玩法</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3>多样化风格</h3>
+                    <p>不同的音乐，不同的关卡风格。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>唯美视觉</h3>
+                    <p>精美的视觉效果，营造沉浸式的游戏体验。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>挑战性关卡</h3>
+                    <p>精心设计的关卡，考验你的节奏感和反应能力。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>多难度选择</h3>
+                    <p>从简单到困难，满足不同水平玩家的需求。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>成就系统</h3>
+                    <p>完成挑战解锁成就，展示你的游戏实力。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>免费游玩</h3>
+                    <p>同人游戏，无商业化性质。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下载区域 -->
+    <section class="download" id="download">
+        <div class="container">
+            <div class="download-content">
+                <div class="section-title">
+                    <h2>获取游戏</h2>
+                    <p>GOGOGO出发咯！</p>
+                </div>
+
+                <div class="download-options">
+                    <!-- Android下载链接 -->
+                    <a href="Simply Trace 1.0.apk" class="download-btn" download>
+                        <i class="fab fa-android"></i>
+                        <div>
+                            <div>Android 版</div>
+                            <div>Download</div>
+                        </div>
+                    </a>
+
+                    <!-- PC下载链接 -->
+                    <a href="Simply Trace v1.0.zip" class="download-btn" download>
+                        <i class="fas fa-desktop"></i>
+                        <div>
+                            <div>PC 版</div>
+                            <div>Download</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer id="support">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>简途</h3>
+                    <p>化繁为简，循线而行</p>
+                    <div class="social-links">
+                        <a href="https://qm.qq.com/q/Kd120xf4gS"><i class="fab fa-qq"></i></a>
+                        <a href="https://qm.qq.com/q/P3MBEeVC4o"><i class="fab fa-qq"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3>游戏</h3>
+                    <ul class="footer-links">
+                        <li><a href="#levels">游戏关卡</a></li>
+                        <li><a href="#features">游戏特色</a></li>
+                        <li><a href="#download">下载游戏</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>支持</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://space.bilibili.com/80690648" target="_blank">联系我们</a></li>
+                        <li><a href="https://chinadlrs.com/app/59" target="_blank">DLRS同人站页面</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>关于</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://space.bilibili.com/3546960143321334"target="_blank">AbyssStudio</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2025 AbyssStudio. 保留所有权利. Simply Trace · 简途</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 简单的交互效果
+        document.addEventListener('DOMContentLoaded', function () {
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // 导航栏背景变化
+            window.addEventListener('scroll', function () {
+                const header = document.querySelector('header');
+                if (window.scrollY > 100) {
+                    header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                    header.style.backdropFilter = 'blur(10px)';
+                } else {
+                    header.style.backgroundColor = 'white';
+                    header.style.backdropFilter = 'none';
+                }
+            });
+
+            // CTA按钮点击效果
+            document.querySelectorAll('.cta-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    this.textContent = '正在跳转...';
+                    setTimeout(() => {
+                        window.location.href = '#download';
+                        this.textContent = '立即体验';
+                    }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
